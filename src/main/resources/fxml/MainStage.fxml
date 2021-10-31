@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="anchorPane" prefHeight="227.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.przybysz.kamila.controller.MainStageController">
+    <children>
+            <MenuBar fx:id="menuBar" layoutY="2.0" prefHeight="25.0" prefWidth="400.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="2.0">
+                <menus>
+                    <Menu id="menuBarPlik" fx:id="menuBarPlik" mnemonicParsing="false" text="Plik">
+                        <items>
+                            <MenuItem id="menuItemLoadFile" fx:id="menuItemLoadFile" mnemonicParsing="false" onAction="#loadFile" text="Wczytaj obraz" />
+                            <MenuItem id="menuItemSaveFileAs" fx:id="menuItemSaveFileAs" mnemonicParsing="false" onAction="#saveFileAs" text="Zapisz..." />
+                            <MenuItem id="menuItemDuplicate" fx:id="menuItemDuplicate" mnemonicParsing="false" onAction="#duplicateFile" text="Duplikuj" />
+                        </items>
+                    </Menu>
+                    <Menu mnemonicParsing="false" text="Edit">
+                        <items>
+                  <MenuItem fx:id="menuItemEqualizationHistogram" mnemonicParsing="false" onAction="#equalizationHistogram" text="Wyrownanie histogramu typu equalizacja" />
+                            <MenuItem fx:id="menuItemfullScaleHistogram" mnemonicParsing="false" onAction="#fullScaleHistogram" text="Liniowe rozciaganie histogramu" />
+                  <MenuItem fx:id="menuItemScaleHistogramQ1Q2" mnemonicParsing="false" onAction="#scaleHistogramQ1Q2" text="Rozciaganie histogramu ze wskazanym zakresem" />
+                  <Menu mnemonicParsing="false" text="Operacje punktowe jednoargumentowe">
+                    <items>
+                        <MenuItem fx:id="menuItemBinaryThresholding" mnemonicParsing="false" onAction="#binaryThresholdingImage" text="Progowanie binarne" />
+                        <MenuItem fx:id="menuItemLevelColorThresholding" mnemonicParsing="false" onAction="#levelColorThresholding" text="Progowanie z zachowaniem poziomow szarosci" />
+                      <MenuItem fx:id="menuItemNegative" mnemonicParsing="false" onAction="#negativeImage" text="Negacja" />
+                        <MenuItem fx:id="menuItemReductionLevelsColors" mnemonicParsing="false" onAction="#reductionLevelsColors" text="Redukcja poziomow szarosci" />
+                    </items>
+                  </Menu>
+                        </items>
+                    </Menu>
+                    <Menu mnemonicParsing="false" text="Help">
+                        <items>
+                            <MenuItem mnemonicParsing="false" text="About" />
+                        </items>
+                    </Menu>
+                </menus>
+            </MenuBar>
+      <HBox layoutX="93.0" layoutY="42.0" prefHeight="168.0" prefWidth="400.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
+         <children>
+            <BorderPane prefHeight="168.0" prefWidth="405.0">
+               <center>
+                  <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Label text="Dostępne obrazy:">
+                           <HBox.margin>
+                              <Insets left="5.0" right="15.0" />
+                           </HBox.margin>
+                        </Label>
+                        <ComboBox fx:id="imagesList" onAction="#getActiveImageViewStage" prefWidth="150.0" />
+                     </children>
+                  </HBox>
+               </center>
+            </BorderPane>
+         </children>
+      </HBox>
+        </children>
+
+
+</AnchorPane>

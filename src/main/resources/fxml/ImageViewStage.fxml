@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<SplitPane fx:id="splitPane" dividerPositions="0.5720250521920668" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.przybysz.kamila.controller.ImageViewStageController">
+  <items>
+    <AnchorPane fx:id="imagePane" minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="400.0">
+         <children>
+            <ScrollPane layoutY="1.0" prefHeight="398.0" prefWidth="398.0">
+               <content>
+                  <AnchorPane fx:id="anchorPaneImageViewLeft" prefHeight="300.0" prefWidth="300.0">
+                     <children>
+                        <ImageView fx:id="imageViewLeft" fitHeight="150.0" fitWidth="200.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+               </content></ScrollPane>
+         </children></AnchorPane>
+    <AnchorPane fx:id="histogram" minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="400.0">
+         <children>
+            <VBox prefHeight="298.0" prefWidth="210.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label prefHeight="17.0" prefWidth="85.0" text="HISTOGRAMY" textAlignment="CENTER" />
+                  <Separator prefWidth="200.0" />
+                  <ScrollPane prefHeight="281.0" prefWidth="339.0">
+                     <content>
+                        <TabPane fx:id="histogramTabPane" prefHeight="269.0" prefWidth="337.0" tabClosingPolicy="UNAVAILABLE">
+                          <tabs>
+                            <Tab fx:id="histogramMonochromaticTab" text="Monochromatyczny">
+                              <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                              </content>
+                            </Tab>
+                            <Tab fx:id="histogramRGBTab" text="RGB">
+                              <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                              </content>
+                            </Tab>
+                              <Tab fx:id="tablicaLUTTab" text="tablica LUT">
+                                  <content>
+                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+
+                                      </AnchorPane>
+                                  </content>
+                              </Tab>
+                          </tabs>
+                        </TabPane>
+                     </content>
+                  </ScrollPane>
+               </children>
+            </VBox>
+         </children></AnchorPane>
+  </items>
+</SplitPane>

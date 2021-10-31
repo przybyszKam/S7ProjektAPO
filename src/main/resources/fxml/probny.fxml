@@ -1,0 +1,23 @@
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+
+<!--<?import javafx.scene.control.*?>-->
+<!--<?import javafx.scene.layout.*?>-->
+
+<!--<AnchorPane prefHeight="224.0" prefWidth="394.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxml.Probny">-->
+<!--   <children>-->
+<!--      <Label layoutX="30.0" layoutY="34.0" text="P1:" />-->
+<!--      <Label layoutX="230.0" layoutY="34.0" text="P2:" />-->
+<!--      <Label layoutX="29.0" layoutY="97.0" text="Q1:" />-->
+<!--      <Label layoutX="229.0" layoutY="97.0" text="Q2:" />-->
+<!--      <Slider fx:id="p1" layoutX="14.0" layoutY="59.0" max="255.0" />-->
+<!--      <Slider fx:id="p2" layoutX="215.0" layoutY="59.0" />-->
+<!--      <Slider fx:id="q1" layoutX="14.0" layoutY="121.0" max="255.0" />-->
+<!--      <Slider fx:id="q2" layoutX="215.0" layoutY="121.0" prefHeight="14.0" prefWidth="140.0" />-->
+<!--      <Button layoutX="329.0" layoutY="185.0" mnemonicParsing="false" text="Anuluj" />-->
+<!--      <Button layoutX="259.0" layoutY="185.0" mnemonicParsing="false" text="Zastosuj" />-->
+<!--      <Label layoutX="84.0" layoutY="34.0" text="Label p1" />-->
+<!--      <Label layoutX="285.0" layoutY="34.0" text="Label p2" />-->
+<!--      <Label layoutX="84.0" layoutY="97.0" text="Label q1" />-->
+<!--      <Label layoutX="285.0" layoutY="97.0" text="Label q2" />-->
+<!--   </children>-->
+<!--</AnchorPane>-->

@@ -1,0 +1,28 @@
+/*
+.default-color0.chart-bar { -fx-bar-fill: red; }*/
+.default-color0.chart-bar { -fx-bar-fill: black; }
+.default-color1.chart-bar { -fx-bar-fill: green; }
+.default-color2.chart-bar { -fx-bar-fill: blue; }
+/*
+.default-color0.chart-bar-symbol { -fx-background-color: #75bae9, white; }
+/*
+/*.default-color3.chart-bar { -fx-bar-fill: #ffff00; }
+.default-color4.chart-bar { -fx-bar-fill: #e90000; }
+.default-color5.chart-bar { -fx-bar-fill: #1be900; }
+.default-color6.chart-bar { -fx-bar-fill: #0029e9; }*/
+
+/*.series0.chart-series-area-line { -fx-stroke: #606060; visibility: hidden; }
+.series1.chart-series-area-line { -fx-stroke: #00ffff; visibility: hidden; }
+.series2.chart-series-area-line { -fx-stroke: #ff00ff; visibility: hidden; }
+.series3.chart-series-area-line { -fx-stroke: #ffff00; visibility: hidden; }
+.series4.chart-series-area-line { -fx-stroke: #e90000; visibility: hidden; }
+.series5.chart-series-area-line { -fx-stroke: #1be900; visibility: hidden; }
+.series6.chart-series-area-line { -fx-stroke: #0029e9; visibility: hidden; }
+
+.series0.chart-series-area-fill { -fx-fill: #606060; }
+.series1.chart-series-area-fill { -fx-fill: #00ffff; }
+.series2.chart-series-area-fill { -fx-fill: #ff00ff; }
+.series3.chart-series-area-fill { -fx-fill: #ffff00; }
+.series4.chart-series-area-fill { -fx-fill: #e90000; }
+.series5.chart-series-area-fill { -fx-fill: #1be900; }
+.series6.chart-series-area-fill { -fx-fill: #0029e9; }*/

@@ -303,6 +303,9 @@ public class MainStageController {
             if (file != null) {
                 String fileName = imageAndMatTool.createFileName(imagesList, activeImageViewStage.getImageName());//np 4.png
                 ImageViewStage stage = createNewImageViewStage(fileName, file);
+                stage.setMat(activeImageViewStage.getMat());
+                stage.setBufferedImage(activeImageViewStage.getBufferedImage());
+                stage.getImageViewStageController().getImageViewLeft().setImage(activeImageViewStage.getImageViewStageController().getImageViewLeft().getImage());
                 stage.show();
                 return stage;
             }

@@ -9,7 +9,6 @@ import pl.przybysz.kamila.controller.ImageViewStageController;
 import pl.przybysz.kamila.controller.MainStageController;
 import pl.przybysz.kamila.utils.ImageHistogram;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 

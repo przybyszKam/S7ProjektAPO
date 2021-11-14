@@ -28,6 +28,13 @@
                         <MenuItem fx:id="menuItemReductionLevelsColors" mnemonicParsing="false" onAction="#reductionLevelsColors" text="Redukcja poziomow szarosci" />
                     </items>
                   </Menu>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="menuItemLinearBlur" mnemonicParsing="false" onAction="#linearBlur" text="Wygładzanie liniowego oparte na maskach" />
+                  <MenuItem fx:id="menuItemSharpenMask" mnemonicParsing="false" onAction="#sharpenMask" text="Wyostrzenie liniowe oparte na maskach laplasjanowych" />
+                  <MenuItem fx:id="menuItemEdgeDirectionSobel" mnemonicParsing="false" onAction="#edgeDirectionSobel" text="Kierunkowa detekcja krawedzi - Sobel" />
+                  <MenuItem fx:id="menuItemEdgeDirectionPrewitt" mnemonicParsing="false" onAction="#edgeDirectionPrewitt" text="Kierunkowa detekcja krawedzi - Prewitt" />
+                  <MenuItem fx:id="menuItemEdgeDirectionCannyego" mnemonicParsing="false" onAction="#edgeDirectionCannyego" text="Kierunkowa detekcja krawedzi - Cannyego" />
+                  <MenuItem fx:id="menuItemUniversalMedian" mnemonicParsing="false" onAction="#universalMedian" text="Uniwersalna operacja medianowa" />
                         </items>
                     </Menu>
                     <Menu mnemonicParsing="false" text="Help">

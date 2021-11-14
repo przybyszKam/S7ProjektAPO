@@ -12,7 +12,7 @@
                <content>
                   <AnchorPane fx:id="anchorPaneImageViewLeft" prefHeight="300.0" prefWidth="300.0">
                      <children>
-                        <ImageView fx:id="imageViewLeft" fitHeight="150.0" fitWidth="200.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageViewLeft" fitHeight="298.0" fitWidth="388.0" layoutY="-5.0" pickOnBounds="true" preserveRatio="true" />
                      </children>
                   </AnchorPane>
                </content></ScrollPane>

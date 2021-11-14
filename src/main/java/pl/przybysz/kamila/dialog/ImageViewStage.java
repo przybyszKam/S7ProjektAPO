@@ -4,10 +4,12 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.image.PixelReader;
 import javafx.stage.Stage;
+import org.opencv.core.Mat;
 import pl.przybysz.kamila.controller.ImageViewStageController;
 import pl.przybysz.kamila.controller.MainStageController;
 import pl.przybysz.kamila.utils.ImageHistogram;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -22,6 +24,7 @@ public class ImageViewStage extends Stage {
     private BufferedImage bufferedImage;
     private File file;
     private String extension;//rozszerzenie pliku
+    private Mat mat;
 
     private Boolean activeStage;//z początku nie jest aktywna
     private Boolean openStage;//true - kiedy jest otwarta, false - kiedy zamknie się okno
@@ -39,7 +42,13 @@ public class ImageViewStage extends Stage {
         });
     }
 
+    public Mat getMat() {
+        return mat;
+    }
 
+    public void setMat(Mat mat) {
+        this.mat = mat;
+    }
 
 
 

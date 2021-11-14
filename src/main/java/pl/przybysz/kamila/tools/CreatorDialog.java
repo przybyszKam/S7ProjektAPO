@@ -2,13 +2,16 @@ package pl.przybysz.kamila.tools;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.TextAlignment;
-import pl.przybysz.kamila.controller.MainStageController;
+import org.opencv.core.Size;
+import pl.przybysz.kamila.enums.BorderType;
+import pl.przybysz.kamila.enums.Mask;
 
 public class CreatorDialog {
-
 
     public static Alert createAlterReductionLevelColor(){
         Alert alert = ElementsDialog.createAlter(Alert.AlertType.NONE, "Redukcja poziomow szarosci");
@@ -24,13 +27,13 @@ public class CreatorDialog {
         slider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                MainStageController.reductionLevel = (int) slider.getValue();
-                reductionLabel.setText(String.valueOf( MainStageController.reductionLevel));
+                ImageAndMatTool.reductionLevel = (int) slider.getValue();
+                reductionLabel.setText(String.valueOf( ImageAndMatTool.reductionLevel));
             }
         });
 
-        MainStageController.reductionLevel = (int) slider.getValue();
-        reductionLabel.setText(String.valueOf( MainStageController.reductionLevel));
+        ImageAndMatTool.reductionLevel = (int) slider.getValue();
+        reductionLabel.setText(String.valueOf(ImageAndMatTool.reductionLevel));
 
         ButtonType applyButtonType = new ButtonType("Zastosuj", ButtonBar.ButtonData.OK_DONE);
         ButtonType cancelButtonType = new ButtonType("Anuluj", ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -62,11 +65,11 @@ public class CreatorDialog {
         sliderP1.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                MainStageController.thresholdP1 = (int) sliderP1.getValue();
-                thresholdingLabelP1.setText(String.valueOf(MainStageController.thresholdP1));
-                sliderP2.setMin(MainStageController.thresholdP1);
-                if(sliderP2.getValue()<MainStageController.thresholdP1){
-                    sliderP2.setValue(MainStageController.thresholdP1);
+                ImageAndMatTool.thresholdP1 = (int) sliderP1.getValue();
+                thresholdingLabelP1.setText(String.valueOf(ImageAndMatTool.thresholdP1));
+                sliderP2.setMin(ImageAndMatTool.thresholdP1);
+                if(sliderP2.getValue()<ImageAndMatTool.thresholdP1){
+                    sliderP2.setValue(ImageAndMatTool.thresholdP1);
                     thresholdingLabelP2.setText(String.valueOf(sliderP2.getValue()));
                 }
             }
@@ -75,21 +78,21 @@ public class CreatorDialog {
         sliderP2.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                MainStageController.thresholdP2 = (int) sliderP2.getValue();
-                thresholdingLabelP2.setText(String.valueOf(MainStageController.thresholdP2));
-                sliderP1.setMax(MainStageController.thresholdP2);
-                if(sliderP1.getValue()>MainStageController.thresholdP2){
-                    sliderP1.setValue(MainStageController.thresholdP2);
+                ImageAndMatTool.thresholdP2 = (int) sliderP2.getValue();
+                thresholdingLabelP2.setText(String.valueOf(ImageAndMatTool.thresholdP2));
+                sliderP1.setMax(ImageAndMatTool.thresholdP2);
+                if(sliderP1.getValue()>ImageAndMatTool.thresholdP2){
+                    sliderP1.setValue(ImageAndMatTool.thresholdP2);
                     thresholdingLabelP1.setText(String.valueOf(sliderP1.getValue()));
                 }
             }
         });
 
-        MainStageController.thresholdP1 = (int) sliderP1.getValue();
-        thresholdingLabelP1.setText(String.valueOf(MainStageController.thresholdP1));
+        ImageAndMatTool.thresholdP1 = (int) sliderP1.getValue();
+        thresholdingLabelP1.setText(String.valueOf(ImageAndMatTool.thresholdP1));
 
-        MainStageController.thresholdP2 = (int) sliderP2.getValue();
-        thresholdingLabelP2.setText(String.valueOf(MainStageController.thresholdP2));
+        ImageAndMatTool.thresholdP2 = (int) sliderP2.getValue();
+        thresholdingLabelP2.setText(String.valueOf(ImageAndMatTool.thresholdP2));
 
         ButtonType applyButtonType = new ButtonType("Zastosuj", ButtonBar.ButtonData.OK_DONE);
         ButtonType cancelButtonType = new ButtonType("Anuluj", ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -118,13 +121,13 @@ public class CreatorDialog {
         slider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                MainStageController.thresholdP1 = (int) slider.getValue();
-                thresholdingLabel.setText(String.valueOf(MainStageController.thresholdP1));
+                ImageAndMatTool.thresholdP1 = (int) slider.getValue();
+                thresholdingLabel.setText(String.valueOf(ImageAndMatTool.thresholdP1));
             }
         });
 
-        MainStageController.thresholdP1 = (int) slider.getValue();
-        thresholdingLabel.setText(String.valueOf(MainStageController.thresholdP1));
+        ImageAndMatTool.thresholdP1 = (int) slider.getValue();
+        thresholdingLabel.setText(String.valueOf(ImageAndMatTool.thresholdP1));
 
         ButtonType applyButtonType = new ButtonType("Zastosuj", ButtonBar.ButtonData.OK_DONE);
         ButtonType cancelButtonType = new ButtonType("Anuluj", ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -164,11 +167,11 @@ public class CreatorDialog {
         sliderP1.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                MainStageController.scaleHistogramP1 = (int) sliderP1.getValue();
-                scaleLabelP1.setText(String.valueOf(MainStageController.scaleHistogramP1));
-                sliderP2.setMin(MainStageController.scaleHistogramP1);
-                if(sliderP2.getValue()<MainStageController.scaleHistogramP1){
-                    sliderP2.setValue(MainStageController.scaleHistogramP1);
+                ImageAndMatTool.scaleHistogramP1 = (int) sliderP1.getValue();
+                scaleLabelP1.setText(String.valueOf(ImageAndMatTool.scaleHistogramP1));
+                sliderP2.setMin(ImageAndMatTool.scaleHistogramP1);
+                if(sliderP2.getValue()<ImageAndMatTool.scaleHistogramP1){
+                    sliderP2.setValue(ImageAndMatTool.scaleHistogramP1);
                     scaleLabelP2.setText(String.valueOf(sliderP2.getValue()));
                 }
             }
@@ -177,11 +180,11 @@ public class CreatorDialog {
         sliderP2.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                MainStageController.scaleHistogramP2 = (int) sliderP2.getValue();
-                scaleLabelP2.setText(String.valueOf(MainStageController.scaleHistogramP2));
-                sliderP1.setMax(MainStageController.scaleHistogramP2);
-                if(sliderP1.getValue()>MainStageController.scaleHistogramP2){
-                    sliderP1.setValue(MainStageController.scaleHistogramP2);
+                ImageAndMatTool.scaleHistogramP2 = (int) sliderP2.getValue();
+                scaleLabelP2.setText(String.valueOf(ImageAndMatTool.scaleHistogramP2));
+                sliderP1.setMax(ImageAndMatTool.scaleHistogramP2);
+                if(sliderP1.getValue()>ImageAndMatTool.scaleHistogramP2){
+                    sliderP1.setValue(ImageAndMatTool.scaleHistogramP2);
                     scaleLabelP1.setText(String.valueOf(sliderP1.getValue()));
                 }
             }
@@ -190,11 +193,11 @@ public class CreatorDialog {
         sliderQ1.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                MainStageController.scaleHistogramQ1 = (int) sliderQ1.getValue();
-                scaleLabelQ1.setText(String.valueOf(MainStageController.scaleHistogramQ1));
-                sliderQ2.setMin(MainStageController.scaleHistogramQ1);
-                if(sliderQ2.getValue()<MainStageController.scaleHistogramQ1){
-                    sliderQ2.setValue(MainStageController.scaleHistogramQ1);
+                ImageAndMatTool.scaleHistogramQ1 = (int) sliderQ1.getValue();
+                scaleLabelQ1.setText(String.valueOf(ImageAndMatTool.scaleHistogramQ1));
+                sliderQ2.setMin(ImageAndMatTool.scaleHistogramQ1);
+                if(sliderQ2.getValue()<ImageAndMatTool.scaleHistogramQ1){
+                    sliderQ2.setValue(ImageAndMatTool.scaleHistogramQ1);
                     scaleLabelQ2.setText(String.valueOf(sliderQ2.getValue()));
                 }
             }
@@ -203,27 +206,27 @@ public class CreatorDialog {
         sliderQ2.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                MainStageController.scaleHistogramQ2 = (int) sliderQ2.getValue();
-                scaleLabelQ2.setText(String.valueOf(MainStageController.scaleHistogramQ2));
-                sliderQ1.setMax(MainStageController.scaleHistogramQ2);
-                if(sliderQ1.getValue()>MainStageController.scaleHistogramQ2){
-                    sliderQ1.setValue(MainStageController.scaleHistogramQ2);
+                ImageAndMatTool.scaleHistogramQ2 = (int) sliderQ2.getValue();
+                scaleLabelQ2.setText(String.valueOf(ImageAndMatTool.scaleHistogramQ2));
+                sliderQ1.setMax(ImageAndMatTool.scaleHistogramQ2);
+                if(sliderQ1.getValue()>ImageAndMatTool.scaleHistogramQ2){
+                    sliderQ1.setValue(ImageAndMatTool.scaleHistogramQ2);
                     scaleLabelQ1.setText(String.valueOf(sliderQ1.getValue()));
                 }
             }
         });
 
-        MainStageController.scaleHistogramP1 = (int) sliderP1.getValue();
-        scaleLabelP1.setText(String.valueOf(MainStageController.scaleHistogramP1));
+        ImageAndMatTool.scaleHistogramP1 = (int) sliderP1.getValue();
+        scaleLabelP1.setText(String.valueOf(ImageAndMatTool.scaleHistogramP1));
 
-        MainStageController.scaleHistogramP2 = (int) sliderP2.getValue();
-        scaleLabelP2.setText(String.valueOf(MainStageController.scaleHistogramP2));
+        ImageAndMatTool.scaleHistogramP2 = (int) sliderP2.getValue();
+        scaleLabelP2.setText(String.valueOf(ImageAndMatTool.scaleHistogramP2));
 
-        MainStageController.scaleHistogramQ1 = (int) sliderQ1.getValue();
-        scaleLabelQ1.setText(String.valueOf(MainStageController.scaleHistogramQ1));
+        ImageAndMatTool.scaleHistogramQ1 = (int) sliderQ1.getValue();
+        scaleLabelQ1.setText(String.valueOf(ImageAndMatTool.scaleHistogramQ1));
 
-        MainStageController.scaleHistogramQ2 = (int) sliderQ2.getValue();
-        scaleLabelQ2.setText(String.valueOf(MainStageController.scaleHistogramQ2));
+        ImageAndMatTool.scaleHistogramQ2 = (int) sliderQ2.getValue();
+        scaleLabelQ2.setText(String.valueOf(ImageAndMatTool.scaleHistogramQ2));
 
         ButtonType applyButtonType = new ButtonType("Zastosuj", ButtonBar.ButtonData.OK_DONE);
         ButtonType cancelButtonType = new ButtonType("Anuluj", ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -235,6 +238,374 @@ public class CreatorDialog {
         scaleAnchorPane.getChildren().addAll(labelP1, sliderP1, scaleLabelP1, labelP2, sliderP2, scaleLabelP2, labelQ1, sliderQ1, scaleLabelQ1, labelQ2, sliderQ2, scaleLabelQ2);
 
         alert.getDialogPane().setContent(scaleAnchorPane);
+        return alert;
+    }
+
+    public static Alert createLinearBlur(){
+        Alert alert = ElementsDialog.createAlter(Alert.AlertType.NONE, "Wygładzanie liniowe oparte na maskach wygładzania");
+        alert.setOnCloseRequest(event -> {
+            alert.close();
+        });
+
+        ToggleGroup toggleGroup = new ToggleGroup();
+
+        RadioButton radioButton1 = ElementsDialog.createRadioButton("Uśrednianie", true, false, 14, 14, toggleGroup);
+        RadioButton radioButton2 = ElementsDialog.createRadioButton("Uśrednianie z wagami", false, false, 14, 39, toggleGroup);
+        RadioButton radioButton3 = ElementsDialog.createRadioButton("Filtr gaussowski", false, false, 14, 64, toggleGroup);
+
+        ComboBox comboBox = ElementsDialog.createComboBox(151, 10, 25, 105);
+        comboBox.getItems().addAll("3x3", "5x5");
+
+        comboBox.valueProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue observable, String oldValue, String newValue) {
+                String[] temp = newValue.split("x");
+                ImageAndMatTool.averageSize = new Size(Integer.valueOf(temp[0]), Integer.valueOf(temp[1]));
+            }
+        });
+
+        Label labelColon = ElementsDialog.createLabel(": ", 153, 39);
+
+        TextField textFieldK = new TextField();
+        textFieldK.setLayoutX(165);
+        textFieldK.setLayoutY(39);
+        textFieldK.setPrefWidth(40);
+        textFieldK.setPrefHeight(17);
+        textFieldK.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if(!newValue.matches("\\d*")){
+                    textFieldK.setText(newValue.replaceAll("[^\\d]", ""));
+                }else {
+                    ImageAndMatTool.blurK = Integer.parseInt(textFieldK.getText());
+                }
+            }
+        });
+
+        labelColon.setVisible(false);
+        textFieldK.setVisible(false);
+
+        toggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+                if (radioButton2.isSelected()){
+                    labelColon.setVisible(true);
+                    textFieldK.setVisible(true);
+                    comboBox.setVisible(false);
+                    ImageAndMatTool.usingMask = Mask.B;
+                }else {
+                    labelColon.setVisible(false);
+                    textFieldK.setVisible(false);
+                    if(radioButton1.isSelected()){
+                        comboBox.setVisible(true);
+                        ImageAndMatTool.usingMask = Mask.A;
+                    }else{
+                        comboBox.setVisible(false);
+                        ImageAndMatTool.usingMask = Mask.G;
+                    }
+                }
+            }
+        });
+
+        ImageAndMatTool.usingMask = Mask.A;
+
+        ButtonType applyButtonType = new ButtonType("Zastosuj", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType("Anuluj", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getDialogPane().getButtonTypes().addAll(applyButtonType, cancelButtonType);
+
+        AnchorPane scaleAnchorPane = new AnchorPane();
+        scaleAnchorPane.setPrefHeight(144);
+        scaleAnchorPane.setPrefWidth(310);
+        scaleAnchorPane.getChildren().addAll(radioButton1, comboBox, radioButton2, labelColon, textFieldK, radioButton3);
+
+        alert.getDialogPane().setContent(scaleAnchorPane);
+        return alert;
+    }
+
+    public static Alert createSharpenMask(){
+        Alert alert = ElementsDialog.createAlter(Alert.AlertType.NONE, "Wyostrzania liniowego oparte na maskach laplasjanowych");
+            alert.setOnCloseRequest(event -> {
+            alert.close();
+        });
+
+        ToggleGroup toggleGroup = new ToggleGroup();
+
+        RadioButton radioButton1 = ElementsDialog.createRadioButton("", true, false, 70, 14, toggleGroup);
+        RadioButton radioButton2 = ElementsDialog.createRadioButton("", false, false, 217, 14, toggleGroup);
+        RadioButton radioButton3 = ElementsDialog.createRadioButton("", false, false, 366, 14, toggleGroup);
+
+        toggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+                if (radioButton1.isSelected())
+                    ImageAndMatTool.usingMask = Mask.L1;
+                else if(radioButton2.isSelected())
+                    ImageAndMatTool.usingMask = Mask.L2;
+                else
+                    ImageAndMatTool.usingMask = Mask.L3;
+            }
+        });
+
+        ImageAndMatTool.usingMask = Mask.L1;
+
+        TableView tableView1 = ElementsDialog.createTableView(25,43,120,105);
+        setData3x3(tableView1, Mask.L1.getTab());
+
+        TableView tableView2 = ElementsDialog.createTableView(172,43,120,105);
+        setData3x3(tableView2, Mask.L2.getTab());
+
+        TableView tableView3 = ElementsDialog.createTableView(321,43,120,105);
+        setData3x3(tableView3, Mask.L3.getTab());
+
+        ButtonType applyButtonType = new ButtonType("Zastosuj", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType("Anuluj", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getDialogPane().getButtonTypes().addAll(applyButtonType, cancelButtonType);
+
+        AnchorPane scaleAnchorPane = new AnchorPane();
+        scaleAnchorPane.setPrefHeight(210);
+        scaleAnchorPane.setPrefWidth(450);
+        scaleAnchorPane.getChildren().addAll(radioButton1, radioButton2, radioButton3, tableView1, tableView2, tableView3);
+        alert.getDialogPane().setContent(scaleAnchorPane);
+
+        return alert;
+    }
+
+    public static Alert createEdgeDirectionSobel(){
+        Alert alert = ElementsDialog.createAlter(Alert.AlertType.NONE, "Kierunkowa detekcja krawędzi - Sobel");
+        alert.setOnCloseRequest(event -> {
+            alert.close();
+        });
+
+        ToggleGroup toggleGroup = new ToggleGroup();
+
+        RadioButton radioButton1 = ElementsDialog.createRadioButton("E - Wschód", true, false, 25, 15, toggleGroup);
+        RadioButton radioButton2 = ElementsDialog.createRadioButton("SE - Pł. wschód", false, false, 175, 15, toggleGroup);
+        RadioButton radioButton3 = ElementsDialog.createRadioButton("S - Południe", false, false, 325, 15, toggleGroup);
+        RadioButton radioButton4 = ElementsDialog.createRadioButton("SW - Pł. zachód", false, false, 475, 15, toggleGroup);
+
+        RadioButton radioButton5 = ElementsDialog.createRadioButton("W - Zachód", false, false, 25, 180, toggleGroup);
+        RadioButton radioButton6 = ElementsDialog.createRadioButton("NW - Płn. zachód", false, false, 175, 180, toggleGroup);
+        RadioButton radioButton7 = ElementsDialog.createRadioButton("N - Północ", false, false, 325, 180, toggleGroup);
+        RadioButton radioButton8 = ElementsDialog.createRadioButton("NE - Płn. wschód", false, false, 475, 180, toggleGroup);
+
+        toggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+                if (radioButton1.isSelected())
+                    ImageAndMatTool.usingMask = Mask.SobelE;
+                else if(radioButton2.isSelected())
+                    ImageAndMatTool.usingMask = Mask.SobelSE;
+                else if(radioButton3.isSelected())
+                    ImageAndMatTool.usingMask = Mask.SobelS;
+                else if(radioButton4.isSelected())
+                    ImageAndMatTool.usingMask = Mask.SobelSW;
+                else if(radioButton5.isSelected())
+                    ImageAndMatTool.usingMask = Mask.SobelW;
+                else if(radioButton6.isSelected())
+                    ImageAndMatTool.usingMask = Mask.SobelNW;
+                else if(radioButton7.isSelected())
+                    ImageAndMatTool.usingMask = Mask.SobelN;
+                else if(radioButton8.isSelected())
+                    ImageAndMatTool.usingMask = Mask.SobelNE;
+            }
+        });
+
+        ImageAndMatTool.usingMask = Mask.SobelE;
+
+        TableView tableView1 = ElementsDialog.createTableView(25,45,120,105);
+        setData3x3(tableView1, Mask.SobelE.getTab());
+
+        TableView tableView2 = ElementsDialog.createTableView(175,45,120,105);
+        setData3x3(tableView2, Mask.SobelSE.getTab());
+
+        TableView tableView3 = ElementsDialog.createTableView(325,45,120,105);
+        setData3x3(tableView3, Mask.SobelS.getTab());
+
+        TableView tableView4 = ElementsDialog.createTableView(475,45,120,105);
+        setData3x3(tableView4, Mask.SobelSW.getTab());
+
+        TableView tableView5 = ElementsDialog.createTableView(25,210,120,105);
+        setData3x3(tableView5, Mask.SobelW.getTab());
+
+        TableView tableView6 = ElementsDialog.createTableView(175,210,120,105);
+        setData3x3(tableView6, Mask.SobelNW.getTab());
+
+        TableView tableView7 = ElementsDialog.createTableView(325,210,120,105);
+        setData3x3(tableView7, Mask.SobelN.getTab());
+
+        TableView tableView8 = ElementsDialog.createTableView(475,210,120,105);
+        setData3x3(tableView8, Mask.SobelNE.getTab());
+
+        ButtonType applyButtonType = new ButtonType("Zastosuj", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType("Anuluj", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getDialogPane().getButtonTypes().addAll(applyButtonType, cancelButtonType);
+
+        AnchorPane scaleAnchorPane = new AnchorPane();
+        scaleAnchorPane.setPrefHeight(380);
+        scaleAnchorPane.setPrefWidth(600);
+        scaleAnchorPane.getChildren().addAll(radioButton1, radioButton2, radioButton3, radioButton4, radioButton5, radioButton6, radioButton7, radioButton8,
+                tableView1, tableView2, tableView3, tableView4, tableView5, tableView6, tableView7, tableView8);
+        alert.getDialogPane().setContent(scaleAnchorPane);
+
+        return alert;
+    }
+
+    public static Alert createEdgeDirectionPrewitt(){
+        Alert alert = ElementsDialog.createAlter(Alert.AlertType.NONE, "Kierunkowa detekcja krawędzi - Prewitt kierunki S i E");
+        alert.setOnCloseRequest(event -> {
+            alert.close();
+        });
+
+        Label label = ElementsDialog.createLabel("Wartość: ", 27, 14);
+
+        ToggleGroup toggleGroup = new ToggleGroup();
+
+        RadioButton radioButton1 = ElementsDialog.createRadioButton("Dokładna", true, false, 22, 37, toggleGroup);
+        RadioButton radioButton2 = ElementsDialog.createRadioButton("Przybliżona", false, false, 22, 59, toggleGroup);
+
+        toggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+                if (radioButton1.isSelected())
+                    ImageAndMatTool.valuePrewitt = true;
+                else if(radioButton2.isSelected())
+                    ImageAndMatTool.valuePrewitt = false;
+            }
+        });
+        ImageAndMatTool.valuePrewitt = true;
+
+        ButtonType applyButtonType = new ButtonType("Zastosuj", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType("Anuluj", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getDialogPane().getButtonTypes().addAll(applyButtonType, cancelButtonType);
+
+        AnchorPane scaleAnchorPane = new AnchorPane();
+        scaleAnchorPane.setPrefHeight(130);
+        scaleAnchorPane.setPrefWidth(300);
+        scaleAnchorPane.getChildren().addAll(label, radioButton1, radioButton2);
+        alert.getDialogPane().setContent(scaleAnchorPane);
+
+        return alert;
+    }
+
+    public static Alert createEdgeUniversalMedian(){
+        Alert alert = ElementsDialog.createAlter(Alert.AlertType.NONE, "Uniwersalna operacja medianowa");
+        alert.setOnCloseRequest(event -> {
+            alert.close();
+        });
+
+        Label label = ElementsDialog.createLabel("Rozmiar otoczenia: ", 27, 14);
+
+        ToggleGroup toggleGroup = new ToggleGroup();
+
+        RadioButton radioButton1 = ElementsDialog.createRadioButton("3x3", true, false, 22, 37, toggleGroup);
+        RadioButton radioButton2 = ElementsDialog.createRadioButton("5x5", false, false, 22, 59, toggleGroup);
+        RadioButton radioButton3 = ElementsDialog.createRadioButton("7x7", false, false, 22, 81, toggleGroup);
+        RadioButton radioButton4 = ElementsDialog.createRadioButton("9x9", false, false, 22, 103, toggleGroup);
+
+        toggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+                if (radioButton1.isSelected())
+                    ImageAndMatTool.medianSize = 3;
+                else if(radioButton2.isSelected())
+                    ImageAndMatTool.medianSize = 5;
+                else if(radioButton3.isSelected())
+                    ImageAndMatTool.medianSize = 7;
+                else if(radioButton4.isSelected())
+                    ImageAndMatTool.medianSize = 9;
+            }
+        });
+
+        ImageAndMatTool.medianSize = 3;
+
+        ButtonType applyButtonType = new ButtonType("Zastosuj", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType("Anuluj", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getDialogPane().getButtonTypes().addAll(applyButtonType, cancelButtonType);
+
+        AnchorPane scaleAnchorPane = new AnchorPane();
+        scaleAnchorPane.setPrefHeight(130);
+        scaleAnchorPane.setPrefWidth(300);
+        scaleAnchorPane.getChildren().addAll(label, radioButton1, radioButton2, radioButton3, radioButton4);
+        alert.getDialogPane().setContent(scaleAnchorPane);
+
+        return alert;
+    }
+
+    private static void setData3x3(TableView tableView, int[][] tab){
+        tableView.setEditable(true);
+        final ObservableList<TableRow> data = FXCollections.observableArrayList(
+                new TableRow(tab[0][0],tab[0][1],tab[0][2]),
+                new TableRow(tab[1][0],tab[1][1],tab[1][2]),
+                new TableRow(tab[2][0],tab[2][1],tab[2][2])
+        );
+        tableView.setItems(data);
+    }
+
+    public static Alert createSelectBorderType(){
+        Alert alert = ElementsDialog.createAlter(Alert.AlertType.NONE, "Sposób uzupełnienia wart. brzegowych");
+        alert.setOnCloseRequest(event -> {
+            alert.close();
+        });
+
+        Label label = ElementsDialog.createLabel("Sposób uzupełnienia pikseli brzegowych: ", 27, 14);
+
+        ToggleGroup toggleGroup = new ToggleGroup();
+
+        RadioButton radioButton1 = ElementsDialog.createRadioButton("Pozostawienie wartosci pikseli bez zmian", true, false, 22, 40, toggleGroup);
+        RadioButton radioButton2 = ElementsDialog.createRadioButton("Zadana wartość arbitralna", false, false, 22, 70, toggleGroup);
+        RadioButton radioButton3 = ElementsDialog.createRadioButton("Powielenie skrajnych wierszy i kolumn", false, false, 22, 100, toggleGroup);
+        RadioButton radioButton4 = ElementsDialog.createRadioButton("Wykorzystanie pikseli z istniejącego sąsiedztwa", false, false, 22, 130, toggleGroup);
+
+        Label value = ElementsDialog.createLabel(null, 364, 62, 16, 40, TextAlignment.CENTER);
+        Slider sliderValue = ElementsDialog.createSlider(1, 214, 65, 0, 255, 14, 140, 0, true, true);
+
+        value.setVisible(false);
+        sliderValue.setVisible(false);
+
+        sliderValue.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                ImageAndMatTool.arbitraryValue = (int) sliderValue.getValue();
+                value.setText(String.valueOf(ImageAndMatTool.arbitraryValue));
+            }
+        });
+
+        toggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+                if (radioButton1.isSelected()) {
+                    value.setVisible(false);
+                    sliderValue.setVisible(false);
+                    ImageAndMatTool.borderType = BorderType.PIXEL_WITHOUT_CHANGE;
+                } else if (radioButton2.isSelected()) {
+                    value.setVisible(true);
+                    sliderValue.setVisible(true);
+                    ImageAndMatTool.borderType = BorderType.ARBITRARY_VALUE;
+                } else if (radioButton3.isSelected()){
+                    value.setVisible(false);
+                    sliderValue.setVisible(false);
+                    ImageAndMatTool.borderType = BorderType.REFLECT;
+                }else if(radioButton4.isSelected()){
+                    value.setVisible(false);
+                    sliderValue.setVisible(false);
+                    ImageAndMatTool.borderType = BorderType.PIXEL_FROM_PROXIMITY;
+                }
+            }
+        });
+
+        ImageAndMatTool.borderType = BorderType.PIXEL_WITHOUT_CHANGE;
+        ImageAndMatTool.arbitraryValue = 0;
+
+        ButtonType applyButtonType = new ButtonType("Zastosuj", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType("Anuluj", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getDialogPane().getButtonTypes().addAll(applyButtonType, cancelButtonType);
+
+        AnchorPane scaleAnchorPane = new AnchorPane();
+        scaleAnchorPane.setPrefHeight(200);
+        scaleAnchorPane.setPrefWidth(420);
+        scaleAnchorPane.getChildren().addAll(label, radioButton1, radioButton2, sliderValue, value, radioButton3, radioButton4);
+        alert.getDialogPane().setContent(scaleAnchorPane);
+
         return alert;
     }
 

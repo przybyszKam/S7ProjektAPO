@@ -5,11 +5,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import nu.pattern.OpenCV;
 import org.opencv.core.Core;
 import pl.przybysz.kamila.controller.MainStageController;
 
 public class Main extends Application {
-    static {System.loadLibrary(Core.NATIVE_LIBRARY_NAME);}
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -36,6 +36,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        OpenCV.loadShared();
         System.out.println(Core.VERSION);
         launch(args);
     }

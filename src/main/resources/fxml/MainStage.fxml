@@ -32,8 +32,8 @@
                   <MenuItem fx:id="menuItemLinearBlur" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#linearBlur" text="Wygładzanie liniowego oparte na maskach" />
                   <MenuItem fx:id="menuItemSharpenMask" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#sharpenMask" text="Wyostrzenie liniowe oparte na maskach laplasjanowych" />
                   <MenuItem fx:id="menuItemEdgeDirectionSobel" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#edgeDirectionSobel" text="Kierunkowa detekcja krawedzi - Sobel" />
-                  <MenuItem fx:id="menuItemEdgeDirectionPrewitt" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#edgeDirectionPrewitt" text="Kierunkowa detekcja krawedzi - Prewitt" />
-                  <MenuItem fx:id="menuItemEdgeDirectionCannyego" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#edgeDirectionCannyego" text="Kierunkowa detekcja krawedzi - Cannyego" />
+                  <MenuItem fx:id="menuItemEdgeDirectionPrewitt" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#edgeDirectionPrewitt" text="Operator detekcji krawedzi - Prewitt" />
+                  <MenuItem fx:id="menuItemEdgeDirectionCannyego" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#edgeDirectionCannyego" text="Operator detekcji krawedzi - Cannyego" />
                   <MenuItem fx:id="menuItemUniversalMedian" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#universalMedian" text="Uniwersalna operacja medianowa" />
                         </items>
                     </Menu>

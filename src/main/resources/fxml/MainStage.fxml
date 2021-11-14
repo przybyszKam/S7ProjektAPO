@@ -8,40 +8,47 @@
     <children>
             <MenuBar fx:id="menuBar" layoutY="2.0" prefHeight="25.0" prefWidth="400.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="2.0">
                 <menus>
-                    <Menu id="menuBarPlik" fx:id="menuBarPlik" mnemonicParsing="false" text="Plik">
+                    <Menu id="menuBarPlik" fx:id="menuBarPlik" mnemonicParsing="false" onShowing="#getNeedsImage" text="Plik">
                         <items>
                             <MenuItem id="menuItemLoadFile" fx:id="menuItemLoadFile" mnemonicParsing="false" onAction="#loadFile" text="Wczytaj obraz" />
-                            <MenuItem id="menuItemSaveFileAs" fx:id="menuItemSaveFileAs" mnemonicParsing="false" onAction="#saveFileAs" text="Zapisz..." />
-                            <MenuItem id="menuItemDuplicate" fx:id="menuItemDuplicate" mnemonicParsing="false" onAction="#duplicateFile" text="Duplikuj" />
+                            <MenuItem id="menuItemSaveFileAs" fx:id="menuItemSaveFileAs" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#saveFileAs" text="Zapisz..." />
+                            <MenuItem id="menuItemDuplicate" fx:id="menuItemDuplicate" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#duplicateFile" text="Duplikuj" />
                         </items>
                     </Menu>
-                    <Menu mnemonicParsing="false" text="Edit">
+                    <Menu mnemonicParsing="false" onShowing="#getNeedsImage" text="Edit">
                         <items>
-                  <MenuItem fx:id="menuItemEqualizationHistogram" mnemonicParsing="false" onAction="#equalizationHistogram" text="Wyrownanie histogramu typu equalizacja" />
-                            <MenuItem fx:id="menuItemfullScaleHistogram" mnemonicParsing="false" onAction="#fullScaleHistogram" text="Liniowe rozciaganie histogramu" />
-                  <MenuItem fx:id="menuItemScaleHistogramQ1Q2" mnemonicParsing="false" onAction="#scaleHistogramQ1Q2" text="Rozciaganie histogramu ze wskazanym zakresem" />
+                  <MenuItem fx:id="menuItemEqualizationHistogram" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#equalizationHistogram" text="Wyrownanie histogramu typu equalizacja" />
+                  <MenuItem fx:id="menuItemfullScaleHistogram" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#fullScaleHistogram" text="Liniowe rozciaganie histogramu" />
+                  <MenuItem fx:id="menuItemScaleHistogramQ1Q2" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#scaleHistogramQ1Q2" text="Rozciaganie histogramu ze wskazanym zakresem" />
                   <Menu mnemonicParsing="false" text="Operacje punktowe jednoargumentowe">
                     <items>
-                        <MenuItem fx:id="menuItemBinaryThresholding" mnemonicParsing="false" onAction="#binaryThresholdingImage" text="Progowanie binarne" />
-                        <MenuItem fx:id="menuItemLevelColorThresholding" mnemonicParsing="false" onAction="#levelColorThresholding" text="Progowanie z zachowaniem poziomow szarosci" />
-                      <MenuItem fx:id="menuItemNegative" mnemonicParsing="false" onAction="#negativeImage" text="Negacja" />
-                        <MenuItem fx:id="menuItemReductionLevelsColors" mnemonicParsing="false" onAction="#reductionLevelsColors" text="Redukcja poziomow szarosci" />
+                        <MenuItem fx:id="menuItemBinaryThresholding" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#binaryThresholdingImage" text="Progowanie binarne" />
+                        <MenuItem fx:id="menuItemLevelColorThresholding" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#levelColorThresholding" text="Progowanie z zachowaniem poziomow szarosci" />
+                        <MenuItem fx:id="menuItemNegative" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#negativeImage" text="Negacja" />
+                        <MenuItem fx:id="menuItemReductionLevelsColors" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#reductionLevelsColors" text="Redukcja poziomow szarosci" />
                     </items>
                   </Menu>
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="menuItemLinearBlur" mnemonicParsing="false" onAction="#linearBlur" text="Wygładzanie liniowego oparte na maskach" />
-                  <MenuItem fx:id="menuItemSharpenMask" mnemonicParsing="false" onAction="#sharpenMask" text="Wyostrzenie liniowe oparte na maskach laplasjanowych" />
-                  <MenuItem fx:id="menuItemEdgeDirectionSobel" mnemonicParsing="false" onAction="#edgeDirectionSobel" text="Kierunkowa detekcja krawedzi - Sobel" />
-                  <MenuItem fx:id="menuItemEdgeDirectionPrewitt" mnemonicParsing="false" onAction="#edgeDirectionPrewitt" text="Kierunkowa detekcja krawedzi - Prewitt" />
-                  <MenuItem fx:id="menuItemEdgeDirectionCannyego" mnemonicParsing="false" onAction="#edgeDirectionCannyego" text="Kierunkowa detekcja krawedzi - Cannyego" />
-                  <MenuItem fx:id="menuItemUniversalMedian" mnemonicParsing="false" onAction="#universalMedian" text="Uniwersalna operacja medianowa" />
+                  <MenuItem fx:id="menuItemLinearBlur" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#linearBlur" text="Wygładzanie liniowego oparte na maskach" />
+                  <MenuItem fx:id="menuItemSharpenMask" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#sharpenMask" text="Wyostrzenie liniowe oparte na maskach laplasjanowych" />
+                  <MenuItem fx:id="menuItemEdgeDirectionSobel" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#edgeDirectionSobel" text="Kierunkowa detekcja krawedzi - Sobel" />
+                  <MenuItem fx:id="menuItemEdgeDirectionPrewitt" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#edgeDirectionPrewitt" text="Kierunkowa detekcja krawedzi - Prewitt" />
+                  <MenuItem fx:id="menuItemEdgeDirectionCannyego" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#edgeDirectionCannyego" text="Kierunkowa detekcja krawedzi - Cannyego" />
+                  <MenuItem fx:id="menuItemUniversalMedian" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#universalMedian" text="Uniwersalna operacja medianowa" />
                         </items>
                     </Menu>
-                    <Menu mnemonicParsing="false" text="Help">
+                    <Menu mnemonicParsing="false" onShowing="#getNeedsImage" text="Help">
                         <items>
                             <MenuItem mnemonicParsing="false" text="About" />
                         </items>
                     </Menu>
+            <Menu mnemonicParsing="false" onShowing="#getNeedsImage" text="Projekt">
+               <items>
+                  <MenuItem fx:id="menuItemFFT" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#fastFourierTransformation" text="FFT - Transformata Fouriera" />
+                  <MenuItem fx:id="menuItemIFFT" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#inverseFastFourierTransformation" text="iFFT - Odwritna Transformata Fouriera" />
+                  <MenuItem fx:id="menuItemFFTModify" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#modifyFastFourierTransformation" text="Modyfikacja Transformaty" />
+               </items>
+            </Menu>
                 </menus>
             </MenuBar>
       <HBox layoutX="93.0" layoutY="42.0" prefHeight="168.0" prefWidth="400.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">

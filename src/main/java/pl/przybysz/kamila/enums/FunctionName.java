@@ -13,8 +13,9 @@ public enum FunctionName {
     EDGE_DIRECTION_SOBEL("Kierunkowa detekcja krawedzi - Sobel"),
     EDGE_DIRECTION_PREWITT("Operator detekcji krawedzi - Prewitt"),
     EDGE_DIRECTION_CANNYEGO("Operator detekcji krawedzi - Cannyego"),
-    UNIVERSAL_MEDIAN("Uniwersalna operacja medianowa")
-    ;//universalMedian
+    UNIVERSAL_MEDIAN("Uniwersalna operacja medianowa"),
+    FAST_FOURIER_TRANSFORMATION("FFT - Transformata Fouriera")
+    ;//fastFourierTransformation
     public String description;
 
     private FunctionName(String description) {

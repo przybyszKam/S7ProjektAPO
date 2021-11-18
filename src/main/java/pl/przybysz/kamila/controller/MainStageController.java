@@ -17,10 +17,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.core.Point;
-import org.opencv.core.Size;
+import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import pl.przybysz.kamila.dialog.ImageViewStage;
@@ -28,6 +25,7 @@ import pl.przybysz.kamila.enums.FunctionName;
 import pl.przybysz.kamila.enums.Mask;
 import pl.przybysz.kamila.tools.CalculateTool;
 import pl.przybysz.kamila.tools.CreatorDialog;
+import pl.przybysz.kamila.tools.FFTTool;
 import pl.przybysz.kamila.tools.ImageAndMatTool;
 import pl.przybysz.kamila.utils.ImageHistogram;
 
@@ -35,7 +33,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
+import java.lang.reflect.Array;
+import java.util.*;
 
 import static org.opencv.core.Core.BORDER_REPLICATE;
 
@@ -50,6 +49,7 @@ public class MainStageController {
 
     private CalculateTool calculateTool;
     private ImageAndMatTool imageAndMatTool;
+    private FFTTool fftTool;
 
     private static ObservableList<ImageViewStage> imageViewStageObservableList;//elementy dodawane do observable list
     private static ListProperty<ImageViewStage> imageViewStagesListProperty;
@@ -92,6 +92,7 @@ public class MainStageController {
     private void setTools() {
         this.imageAndMatTool = new ImageAndMatTool();
         this.calculateTool = new CalculateTool();
+        this.fftTool = new FFTTool();
     }
 
     @FXML
@@ -615,6 +616,32 @@ public class MainStageController {
                     }
                 }
                 break;
+                case FAST_FOURIER_TRANSFORMATION:{
+                    Mat primaryMatGray = new Mat();
+                    //konwersja obrazu na szaroodcieniowy
+                    if(primaryMat.channels() != 1)
+                        Imgproc.cvtColor(primaryMat, primaryMatGray, Imgproc.COLOR_RGB2GRAY);
+                    else
+                        primaryMatGray = primaryMat.clone();
+
+                    Mat padded = fftTool.optimizeImageDim(primaryMatGray);
+                    padded.convertTo(padded, CvType.CV_32F);
+
+                    List<Mat> planes = new ArrayList<>();
+                    planes.add(padded);
+                    planes.add(Mat.zeros(padded.size(), CvType.CV_32F));
+
+                    Mat complexImage = new Mat();
+                    Core.merge(planes, complexImage);
+
+                    Core.dft(complexImage, complexImage);
+
+                    Mat magnitude = fftTool.createOptimizedMagnitude(complexImage);
+
+                    newMat = magnitude.clone();
+//                    Imgcodecs.imwrite("C:\\Users\\CP24\\Desktop\\nowy.png", newMat);
+                }
+                break;
             }
             imageAndMatTool.changeImage(newMat, stage);
             loadTabsInTabPane(imageViewStageController);
@@ -691,8 +718,9 @@ public class MainStageController {
 
 
     //Projekt
-    @FXML
+    @FXML//wtkonanie transformaty - wynikiem jest widmo amplitudowe
     public void fastFourierTransformation(ActionEvent actionEvent) {
+        switchFunctionName(FunctionName.FAST_FOURIER_TRANSFORMATION, true, false);
     }
 
     @FXML

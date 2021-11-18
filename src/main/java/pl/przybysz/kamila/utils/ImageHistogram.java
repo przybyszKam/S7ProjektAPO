@@ -64,7 +64,10 @@ public class ImageHistogram {
         seriesMono.setName("mono");
 
         for(int i=0; i<256; i++){
-            mono[i] = (long) (red[i]*0.3 + green[i]*0.6 + blue[i]*0.1);
+            if(red[i]==green[i] && green[i]==blue[i])
+                mono[i] = red[i];
+            else
+                mono[i] = (long) (red[i]*0.3 + green[i]*0.6 + blue[i]*0.1);
         }
 
         for (int i = 0; i < 256; i++) {

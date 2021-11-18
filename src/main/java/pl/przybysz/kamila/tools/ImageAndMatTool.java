@@ -124,7 +124,12 @@ public class ImageAndMatTool {
         ImageViewStageController imageViewStageController = stage.getImageViewStageController();
         stage.setMat(mat);
 
-        java.awt.Image bufferedImage = HighGui.toBufferedImage(mat);
+        Mat tmpMat = mat.clone();
+        tmpMat.convertTo(tmpMat, CvType.CV_8S);
+
+//        FFTTool.mat2Image(mat);
+
+        java.awt.Image bufferedImage = HighGui.toBufferedImage(tmpMat);
         imageViewStageController.setImageInScrollPaneImageLeft((BufferedImage) bufferedImage);
         stage.setBufferedImage((BufferedImage)bufferedImage);
 

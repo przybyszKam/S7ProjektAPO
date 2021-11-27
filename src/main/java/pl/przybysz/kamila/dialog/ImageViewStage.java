@@ -11,7 +11,7 @@ import pl.przybysz.kamila.utils.ImageHistogram;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-
+import java.util.List;
 
 public class ImageViewStage extends Stage {
 
@@ -24,6 +24,11 @@ public class ImageViewStage extends Stage {
     private File file;
     private String extension;//rozszerzenie pliku
     private Mat mat;
+    //FFT
+    private Mat complexImage;//na potrzeby FFT i iFFT
+    private List<Mat> planes;//na potrzeby FFt i iFFT
+    private boolean isMagnitude = false;//czy to widmo
+
 
     private Boolean activeStage;//z początku nie jest aktywna
     private Boolean openStage;//true - kiedy jest otwarta, false - kiedy zamknie się okno
@@ -120,4 +125,29 @@ public class ImageViewStage extends Stage {
     public void setExtension(String extension) {
         this.extension = extension;
     }
+
+    public Mat getComplexImage() {
+        return complexImage;
+    }
+
+    public void setComplexImage(Mat complexImage) {
+        this.complexImage = complexImage;
+    }
+
+    public List<Mat> getPlanes() {
+        return planes;
+    }
+
+    public void setPlanes(List<Mat> planes) {
+        this.planes = planes;
+    }
+
+    public boolean isMagnitude() {
+        return isMagnitude;
+    }
+
+    public void setMagnitude(boolean magnitude) {
+        isMagnitude = magnitude;
+    }
+
 }

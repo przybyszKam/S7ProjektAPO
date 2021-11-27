@@ -36,8 +36,6 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.*;
 
-import static org.opencv.core.Core.BORDER_REPLICATE;
-
 public class MainStageController {
 
     @FXML
@@ -141,6 +139,10 @@ public class MainStageController {
             stage.getImageViewStageController().getImageViewLeft().setImage(activeImageViewStage.getImageViewStageController().getImageViewLeft().getImage());
             if(show == true)
                 stage.show();
+            //FFT
+            stage.setComplexImage(activeImageViewStage.getComplexImage());
+            stage.setPlanes(activeImageViewStage.getPlanes());
+            stage.setMagnitude(activeImageViewStage.isMagnitude());
             return stage;
         }
         return null;
@@ -188,8 +190,6 @@ public class MainStageController {
         imageViewStageController.setImageInScrollPaneImageLeft(bufferedImage);
 
         Mat mat = Imgcodecs.imread(file.getPath(), CvType.CV_8S);
-//         Mat source = Highgui.imread("grayscale.jpg",  Highgui.CV_LOAD_IMAGE_GRAYSCALE);
-//        Mat mat = Imgcodecs.imread(file.getPath(), CvType.CV_8U);  //1 kanał
 
         ImageViewStage stage = new ImageViewStage();
         stage.setScene(new Scene(root));
@@ -242,6 +242,7 @@ public class MainStageController {
     private void switchFunctionName(FunctionName functionName, boolean operationOnMat, boolean openAlert){
         Alert alert = null;
         Optional<ButtonType> result = null;
+        Mat binaryOperationMat = null;
 
         if(openAlert){
             switch (functionName){
@@ -272,8 +273,22 @@ public class MainStageController {
                 case UNIVERSAL_MEDIAN:
                     alert = CreatorDialog.createEdgeUniversalMedian();
                     break;
+                case BINARY_OPERATION_AND:
+                case BINARY_OPERATION_OR:
+                case BINARY_OPERATION_XOR:{
+                    Window window = anchorPane.getScene().getWindow();
+                    FileChooser fileChooser = prepareFileChooser("Wybierz plik...");
+
+                    File chosenFile = fileChooser.showOpenDialog(window);
+                    if (chosenFile != null) {
+                        binaryOperationMat = Imgcodecs.imread(chosenFile.getPath(), CvType.CV_8S);
+                    }else
+                        return;
+                }
+                break;
             }
-            result = alert.showAndWait();
+            if(alert!=null)
+                result = alert.showAndWait();
         }
 
         ImageViewStage stage = duplicateFile(false);
@@ -495,7 +510,7 @@ public class MainStageController {
                                 switch (ImageAndMatTool.usingMask) {
                                     case A:
                                         //uśrednianie
-                                        Imgproc.blur(primaryMat, newMat, ImageAndMatTool.averageSize, new Point(-1, -1), BORDER_REPLICATE);//3x3 lub 5x5   domyslnie jest 3x3
+                                        Imgproc.blur(primaryMat, newMat, ImageAndMatTool.averageSize, new Point(-1, -1), Core.BORDER_REPLICATE);//3x3 lub 5x5   domyslnie jest 3x3
                                         //wartosci brzegowe
                                         imageAndMatTool.fillBorder(primaryMat, newMat, ImageAndMatTool.borderType, (int) ImageAndMatTool.averageSize.height, false, null, null);
                                         break;
@@ -527,7 +542,7 @@ public class MainStageController {
                                         break;
                                     case G:
                                         //filtr gaussowski
-                                        Imgproc.GaussianBlur(primaryMat, newMat, new Size(3, 3), 0, 0, BORDER_REPLICATE);//rozmiar 3x3
+                                        Imgproc.GaussianBlur(primaryMat, newMat, new Size(3, 3), 0, 0, Core.BORDER_REPLICATE);//rozmiar 3x3
                                         imageAndMatTool.fillBorder(primaryMat, newMat, ImageAndMatTool.borderType, 3, false, null, null);
                                         break;
                                 }
@@ -618,7 +633,6 @@ public class MainStageController {
                 break;
                 case FAST_FOURIER_TRANSFORMATION:{
                     Mat primaryMatGray = new Mat();
-                    //konwersja obrazu na szaroodcieniowy
                     if(primaryMat.channels() != 1)
                         Imgproc.cvtColor(primaryMat, primaryMatGray, Imgproc.COLOR_RGB2GRAY);
                     else
@@ -635,11 +649,98 @@ public class MainStageController {
                     Core.merge(planes, complexImage);
 
                     Core.dft(complexImage, complexImage);
-
+                    stage.setComplexImage(complexImage);
+                    stage.setPlanes(planes);
+                    stage.setMagnitude(true);
                     Mat magnitude = fftTool.createOptimizedMagnitude(complexImage);
 
                     newMat = magnitude.clone();
-//                    Imgcodecs.imwrite("C:\\Users\\CP24\\Desktop\\nowy.png", newMat);
+                }
+                break;
+                case INVERSE_FAST_FOURIER_TRANSFORMATION:{
+                    if(!stage.isMagnitude()){
+                        stage.close();
+                        MainStageController.removeFromImageViewStageObservableList(stage);
+                        return;
+                    }
+                    stage.setMagnitude(false);
+                    Mat complexImage = stage.getComplexImage();
+                    List<Mat> planes = stage.getPlanes();
+
+                    Core.idft(complexImage, complexImage);
+                    Mat restoredImage = new Mat();
+                    Core.split(complexImage, planes);
+                    Core.normalize(planes.get(0), restoredImage, 0, 255, Core.NORM_MINMAX);
+                    // move back the Mat to 8 bit, in order to proper show the result
+                    restoredImage.convertTo(restoredImage, CvType.CV_8U);
+                    newMat = restoredImage.clone();
+                }
+                break;
+                case BINARY_OPERATION_AND:{
+                    //sprawdzenie rizmiaru obrazu, ilosc kanlow
+                    if(primaryMat.width()!=binaryOperationMat.width() || primaryMat.height()!=binaryOperationMat.height() || primaryMat.type()!=binaryOperationMat.type())
+                        return;//dodac pozniej informacje o nieprawidlowym obrazie
+                    newMat = new Mat();
+
+                    Core.bitwise_and(primaryMat, binaryOperationMat, newMat);
+                }
+                break;
+                case BINARY_OPERATION_OR:{
+                    if(primaryMat.width()!=binaryOperationMat.width() || primaryMat.height()!=binaryOperationMat.height() || primaryMat.type()!=binaryOperationMat.type())
+                        return;//dodac pozniej informacje o nieprawidlowym obrazie
+                    newMat = new Mat();
+
+                    Core.bitwise_or(primaryMat, binaryOperationMat, newMat);
+                }
+                break;
+                case BINARY_OPERATION_XOR:{
+                    if(primaryMat.width()!=binaryOperationMat.width() || primaryMat.height()!=binaryOperationMat.height() || primaryMat.type()!=binaryOperationMat.type())
+                        return;//dodac pozniej informacje o nieprawidlowym obrazie
+                    newMat = new Mat();
+
+                    Core.bitwise_xor(primaryMat, binaryOperationMat, newMat);
+                }
+                break;
+                case SEGMENT_IMAGE_ADAPTATION:{
+                    newMat = new Mat();
+                    Mat grayScale = new Mat();
+                    Imgproc.cvtColor(primaryMat, grayScale, Imgproc.COLOR_RGB2GRAY);
+                    Imgproc.adaptiveThreshold(grayScale, newMat, 125, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 11, 12);
+                }
+                break;
+                case SEGMENT_IMAGE_OTSU:{
+                    newMat = new Mat();
+                    Mat grayScale = new Mat();
+                    Imgproc.cvtColor(primaryMat, grayScale, Imgproc.COLOR_RGB2GRAY);
+                    Imgproc.threshold(grayScale, newMat, 0, 255, Imgproc.THRESH_BINARY + Imgproc.THRESH_OTSU);
+                }
+                break;
+                case WATERSHED:{
+                    Mat img = primaryMat.clone();
+
+                    Mat threeChannel = new Mat();
+
+                    Imgproc.cvtColor(img, threeChannel, Imgproc.COLOR_BGR2GRAY);
+                    Imgproc.threshold(threeChannel, threeChannel, 0, 255, Imgproc.THRESH_BINARY_INV + Imgproc.THRESH_OTSU);
+
+                    Mat fg = new Mat(img.size(),CvType.CV_8U);
+                    Imgproc.erode(threeChannel,fg,new Mat());
+
+                    Mat bg = new Mat(img.size(),CvType.CV_8U);
+                    Imgproc.dilate(threeChannel,bg,new Mat());
+                    Imgproc.threshold(bg,bg,1, 128,Imgproc.THRESH_BINARY_INV);
+
+                    Mat markers = new Mat(img.size(),CvType.CV_8U, new Scalar(0));
+                    Core.add(fg, bg, markers);
+                    Imgproc.cvtColor(img, img, Imgproc.COLOR_BGRA2BGR);
+                    Mat markers2 = new Mat();
+
+                    markers.convertTo(markers2, CvType.CV_32SC1);
+
+                    Imgproc.watershed(img,markers2);
+                    markers2.convertTo(markers2,CvType.CV_8U);
+
+                    newMat = markers2.clone();
                 }
                 break;
             }
@@ -717,18 +818,55 @@ public class MainStageController {
     }
 
 
+    @FXML
+    public void binaryOperationAND() {
+        switchFunctionName(FunctionName.BINARY_OPERATION_AND, true, true);
+    }
+
+    @FXML
+    public void binaryOperationOR() {
+        switchFunctionName(FunctionName.BINARY_OPERATION_OR, true, true);
+    }
+
+    @FXML
+    public void binaryOperationXOR() {
+        switchFunctionName(FunctionName.BINARY_OPERATION_XOR, true, true);
+    }
+
+    @FXML
+    public void segmentImageOtsu() {
+        switchFunctionName(FunctionName.SEGMENT_IMAGE_OTSU, true, false);
+    }
+
+    @FXML
+    public void watershed() {
+        switchFunctionName(FunctionName.WATERSHED, true, false);
+    }
+
+
+    @FXML
+    public void segmentImageAdaptation() {
+        switchFunctionName(FunctionName.SEGMENT_IMAGE_ADAPTATION, true, false);
+    }
+
+
+
+
     //Projekt
     @FXML//wtkonanie transformaty - wynikiem jest widmo amplitudowe
-    public void fastFourierTransformation(ActionEvent actionEvent) {
+    public void fastFourierTransformation() {
         switchFunctionName(FunctionName.FAST_FOURIER_TRANSFORMATION, true, false);
     }
 
     @FXML
-    public void inverseFastFourierTransformation(ActionEvent actionEvent) {
+    public void inverseFastFourierTransformation() {
+        switchFunctionName(FunctionName.INVERSE_FAST_FOURIER_TRANSFORMATION, true, false);
     }
 
     @FXML
     public void modifyFastFourierTransformation(ActionEvent actionEvent) {
+        //rysowanie po obrazie tylko jesli to jest widmo
     }
+
 
 }

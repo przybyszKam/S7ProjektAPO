@@ -35,6 +35,21 @@
                   <MenuItem fx:id="menuItemEdgeDirectionPrewitt" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#edgeDirectionPrewitt" text="Operator detekcji krawedzi - Prewitt" />
                   <MenuItem fx:id="menuItemEdgeDirectionCannyego" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#edgeDirectionCannyego" text="Operator detekcji krawedzi - Cannyego" />
                   <MenuItem fx:id="menuItemUniversalMedian" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#universalMedian" text="Uniwersalna operacja medianowa" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                    <Menu mnemonicParsing="false" text="Operacje bitowe">
+                        <items>
+                            <MenuItem fx:id="menuItemOperationAND" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#binaryOperationAND" text="Operacja AND" />
+                            <MenuItem fx:id="menuItemOperationOR" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#binaryOperationOR" text="Operacja OR" />
+                            <MenuItem fx:id="menuItemOperationXOR" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#binaryOperationXOR" text="Operacja XOR" />
+                        </items>
+                    </Menu>
+                   <MenuItem fx:id="menuItemSegmentImageOtsu" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#segmentImageOtsu" text="Segmentacja obrazu - metoda otsu" />
+                            <SeparatorMenuItem mnemonicParsing="false" />
+                            <MenuItem fx:id="menuItemWatershed" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#watershed" text="Segmentacja obrazu - metoda wododziałowa" />
+                            <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="menuItemSegmentImageAdaptation" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#segmentImageAdaptation" text="Segmentacja obrazu - metoda adaptacyjna" />
+
+
                         </items>
                     </Menu>
                     <Menu mnemonicParsing="false" onShowing="#getNeedsImage" text="Help">
@@ -45,7 +60,7 @@
             <Menu mnemonicParsing="false" onShowing="#getNeedsImage" text="Projekt">
                <items>
                   <MenuItem fx:id="menuItemFFT" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#fastFourierTransformation" text="FFT - Transformata Fouriera" />
-                  <MenuItem fx:id="menuItemIFFT" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#inverseFastFourierTransformation" text="iFFT - Odwritna Transformata Fouriera" />
+                  <MenuItem fx:id="menuItemIFFT" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#inverseFastFourierTransformation" text="iFFT - Odwrotna Transformata Fouriera" />
                   <MenuItem fx:id="menuItemFFTModify" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#modifyFastFourierTransformation" text="Modyfikacja Transformaty" />
                </items>
             </Menu>

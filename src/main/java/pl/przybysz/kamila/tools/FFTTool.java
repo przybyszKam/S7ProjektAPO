@@ -23,19 +23,12 @@ public class FFTTool {
     {
         List<Mat> newPlanes = new ArrayList<>();
         Mat mag = new Mat();
-        // split the comples image in two planes
         Core.split(complexImage, newPlanes);
-        // compute the magnitude
         Core.magnitude(newPlanes.get(0), newPlanes.get(1), mag);
-
-        // move to a logarithmic scale
-        Core.add(mag, Scalar.all(1), mag);
+        Core.add(Mat.ones(mag.size(), CvType.CV_32F), mag, mag);
         Core.log(mag, mag);
-        // optionally reorder the 4 quadrants of the magnitude image
         this.shiftDFT(mag);
-        // normalize the magnitude image for the visualization since both JavaFX
-        // and OpenCV need images with value between 0 and 255
-        Core.normalize(mag, mag, 0, 255, Core.NORM_MINMAX);
+        Core.normalize(mag, mag, 0, 255, Core.NORM_MINMAX, CvType.CV_8UC1);
         return mag;
     }
 

@@ -1,11 +1,13 @@
 package pl.przybysz.kamila.tools;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.highgui.HighGui;
+import org.opencv.imgcodecs.Imgcodecs;
 import pl.przybysz.kamila.controller.ImageViewStageController;
 import pl.przybysz.kamila.dialog.ImageViewStage;
 import pl.przybysz.kamila.enums.BorderType;
@@ -14,6 +16,7 @@ import pl.przybysz.kamila.utils.ImageHistogram;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -123,11 +126,7 @@ public class ImageAndMatTool {
     public void changeImage(Mat mat, ImageViewStage stage){
         ImageViewStageController imageViewStageController = stage.getImageViewStageController();
         stage.setMat(mat);
-
         Mat tmpMat = mat.clone();
-        tmpMat.convertTo(tmpMat, CvType.CV_8S);
-
-//        FFTTool.mat2Image(mat);
 
         java.awt.Image bufferedImage = HighGui.toBufferedImage(tmpMat);
         imageViewStageController.setImageInScrollPaneImageLeft((BufferedImage) bufferedImage);

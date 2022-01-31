@@ -4,12 +4,23 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Orientation;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.TextAlignment;
 import org.opencv.core.Size;
+import pl.przybysz.kamila.dialog.ImageViewStage;
 import pl.przybysz.kamila.enums.BorderType;
+import pl.przybysz.kamila.enums.EditMagnitudeType;
 import pl.przybysz.kamila.enums.Mask;
+import pl.przybysz.kamila.enums.SegmentationOption;
+
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 
 public class CreatorDialog {
 
@@ -529,6 +540,220 @@ public class CreatorDialog {
         alert.getDialogPane().setContent(scaleAnchorPane);
 
         return alert;
+    }
+
+    public static Alert createSegmentationImage(){
+        Alert alert = ElementsDialog.createAlter(Alert.AlertType.NONE, "Segmentacja obrazu");
+        alert.setOnCloseRequest(event -> {
+            alert.close();
+        });
+
+        Label label = ElementsDialog.createLabel("Wybierz metodę segmentacji: ", 27, 14);
+
+        ToggleGroup toggleGroup = new ToggleGroup();
+
+        RadioButton radioButton1 = ElementsDialog.createRadioButton("Srednia", true, false, 22, 37, toggleGroup);
+        RadioButton radioButton2 = ElementsDialog.createRadioButton("Odchylenie standardowe", false, false, 22, 59, toggleGroup);
+        RadioButton radioButton3 = ElementsDialog.createRadioButton("Warancja jasności", false, false, 22, 81, toggleGroup);
+
+        toggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+                if (radioButton1.isSelected())
+                    ImageAndMatTool.segmentationOption = SegmentationOption.MEAN;
+                else if(radioButton2.isSelected())
+                    ImageAndMatTool.segmentationOption = SegmentationOption.STANDARD_DEVIATION;
+                else if(radioButton3.isSelected())
+                    ImageAndMatTool.segmentationOption = SegmentationOption.BRIGHTNESS_VARIANCE;
+            }
+        });
+
+        ImageAndMatTool.segmentationOption = SegmentationOption.MEAN;
+
+        ButtonType applyButtonType = new ButtonType("Zastosuj", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType("Anuluj", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getDialogPane().getButtonTypes().addAll(applyButtonType, cancelButtonType);
+
+        AnchorPane scaleAnchorPane = new AnchorPane();
+        scaleAnchorPane.setPrefHeight(130);
+        scaleAnchorPane.setPrefWidth(300);
+        scaleAnchorPane.getChildren().addAll(label, radioButton1, radioButton2, radioButton3);
+        alert.getDialogPane().setContent(scaleAnchorPane);
+
+        return alert;
+    }
+
+    public static Alert createModifyFastFourierTransformation(int sizeMagnitude, BufferedImage bufferedImage){
+        Alert alert = ElementsDialog.createAlter(Alert.AlertType.NONE, "Modyfikacja widma amplitudowego: ");
+        alert.setOnCloseRequest(event -> {
+            alert.close();
+        });
+
+        Label label = ElementsDialog.createLabel("Wybierz wspolrzedne prostokata: ", 326, 14);
+        Label labelP1 = ElementsDialog.createLabel("Punkt P1: ", 326, 31);
+        Label labelP2 = ElementsDialog.createLabel("Punkt P2: ", 326, 109);
+
+        Label labelP1X = ElementsDialog.createLabel("X: ", 343, 56);
+        Label labelP1Y = ElementsDialog.createLabel("Y: ", 343, 83);
+        Label labelP2X = ElementsDialog.createLabel("X: ", 343, 135);
+        Label labelP2Y = ElementsDialog.createLabel("Y: ", 343, 162);
+
+        Label labelValueP1X = ElementsDialog.createLabel(null, 519, 56);
+        Label labelValueP1Y = ElementsDialog.createLabel(null, 519, 83);
+        Label labelValueP2X = ElementsDialog.createLabel(null, 519, 135);
+        Label labelValueP2Y = ElementsDialog.createLabel(null, 519, 162);
+
+        Label labelModification = ElementsDialog.createLabel("Wybierz modyfikacje: ", 326, 207);
+
+        ToggleGroup toggleGroup = new ToggleGroup();
+
+        RadioButton radioButton1 = ElementsDialog.createRadioButton("Wypelnienie biela", true, false, 342, 230, toggleGroup);
+        RadioButton radioButton2 = ElementsDialog.createRadioButton("Wypelnienie czernia", false, false, 342, 255, toggleGroup);
+        RadioButton radioButton3 = ElementsDialog.createRadioButton("Podwojenie wartosci", false, false, 342, 280, toggleGroup);
+
+        Slider sliderP1X = ElementsDialog.createSlider(1, 366, 56, 0, sizeMagnitude, 14, 140, 0, true, true);
+        Slider sliderP1Y = ElementsDialog.createSlider(1, 366, 83, 0, sizeMagnitude, 14, 140, 0, true, true);
+        Slider sliderP2X = ElementsDialog.createSlider(1, 366, 135, 0, sizeMagnitude, 14, 140, 0, true, true);
+        Slider sliderP2Y = ElementsDialog.createSlider(1, 366, 162, 0, sizeMagnitude, 14, 140, 0, true, true);
+
+        ImageView imageView = ElementsDialog.createImageView(0,0,310,310, true, true);
+
+        Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+        imageView.setImage(image);
+
+        ColorModel cm = bufferedImage.getColorModel();
+        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        WritableRaster raster = bufferedImage.copyData(null);
+        BufferedImage bufferedImageNew =  new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+
+        sliderP1X.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                ImageAndMatTool.P1X = (int) sliderP1X.getValue();
+                labelValueP1X.setText(String.valueOf(ImageAndMatTool.P1X));
+                editBufferedImage(bufferedImageNew, ImageAndMatTool.P1X, ImageAndMatTool.P1Y, ImageAndMatTool.P2X, ImageAndMatTool.P2Y, ImageAndMatTool.editMagnitudeType, imageView);
+            }
+        });
+
+        sliderP1Y.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                ImageAndMatTool.P1Y = (int) sliderP1Y.getValue();
+                labelValueP1Y.setText(String.valueOf(ImageAndMatTool.P1Y));
+                editBufferedImage(bufferedImageNew, ImageAndMatTool.P1X, ImageAndMatTool.P1Y, ImageAndMatTool.P2X, ImageAndMatTool.P2Y, ImageAndMatTool.editMagnitudeType, imageView);
+            }
+        });
+
+        sliderP2X.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                ImageAndMatTool.P2X = (int) sliderP2X.getValue();
+                labelValueP2X.setText(String.valueOf(ImageAndMatTool.P2X));
+                editBufferedImage(bufferedImageNew, ImageAndMatTool.P1X, ImageAndMatTool.P1Y, ImageAndMatTool.P2X, ImageAndMatTool.P2Y, ImageAndMatTool.editMagnitudeType, imageView);
+            }
+        });
+
+        sliderP2Y.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                ImageAndMatTool.P2Y = (int) sliderP2Y.getValue();
+                labelValueP2Y.setText(String.valueOf(ImageAndMatTool.P2Y));
+                editBufferedImage(bufferedImageNew, ImageAndMatTool.P1X, ImageAndMatTool.P1Y, ImageAndMatTool.P2X, ImageAndMatTool.P2Y, ImageAndMatTool.editMagnitudeType, imageView);
+            }
+        });
+
+        toggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+                if (radioButton1.isSelected())
+                    ImageAndMatTool.editMagnitudeType = EditMagnitudeType.WHITE;
+                else if(radioButton2.isSelected())
+                    ImageAndMatTool.editMagnitudeType = EditMagnitudeType.BLACK;
+                else if(radioButton3.isSelected())
+                    ImageAndMatTool.editMagnitudeType = EditMagnitudeType.DOUBLE;
+                editBufferedImage(bufferedImageNew, ImageAndMatTool.P1X, ImageAndMatTool.P1Y, ImageAndMatTool.P2X, ImageAndMatTool.P2Y, ImageAndMatTool.editMagnitudeType, imageView);
+            }
+        });
+
+        ImageAndMatTool.editMagnitudeType = EditMagnitudeType.WHITE;
+
+        ButtonType applyButtonType = new ButtonType("Zastosuj", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType("Anuluj", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getDialogPane().getButtonTypes().addAll(applyButtonType, cancelButtonType);
+
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPrefHeight(350);
+        anchorPane.setPrefWidth(620);
+        anchorPane.getChildren().addAll(imageView,
+                label, labelModification, labelP1, labelP1X, labelP1Y, labelP2, labelP2X, labelP2Y,
+                labelValueP1X, labelValueP1Y, labelValueP2X, labelValueP2Y,
+                radioButton1, radioButton2, radioButton3,
+                sliderP1X, sliderP1Y, sliderP2X, sliderP2Y);
+        alert.getDialogPane().setContent(anchorPane);
+        return alert;
+    }
+
+    public static void editBufferedImage(BufferedImage bufferedImage, int startX, int startY, int endX, int endY, EditMagnitudeType type, ImageView imageView){
+        //kopiowanie bufora obrazu
+         ColorModel cm = bufferedImage.getColorModel();
+         boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+         WritableRaster raster = bufferedImage.copyData(null);
+         BufferedImage newImage =  new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+
+        int rgb = 0;
+        int pixel = 0;
+        int red = 0;
+        int green = 0;
+        int blue = 0;
+
+        if(endX <= startX){
+            int tmp = startX;
+            startX = endX;
+            endX = tmp;
+        }
+        if(endY <= startY){
+            int tmp = startY;
+            startY = endY;
+            endY = tmp;
+        }
+
+        for (int i = startX; i < endX; i++) {
+            for (int j = startY; j < endY; j++) {
+                pixel = bufferedImage.getRGB(i, j);
+                red = (pixel >> 16) & 0x000000FF;
+                green = (pixel >> 8) & 0x000000FF;
+                blue = (pixel) & 0x000000FF;
+
+                red = calculateValue(type, red);
+                green = calculateValue(type, green);
+                blue = calculateValue(type, blue);
+
+                rgb = ((red & 0x0ff) << 16) | ((green & 0x0ff) << 8) | (blue & 0x0ff);
+                newImage.setRGB(i, j, rgb);
+            }
+        }
+
+        Image image = SwingFXUtils.toFXImage(newImage, null);
+        imageView.setImage(image);
+    }
+
+    private static int calculateValue(EditMagnitudeType type, int pixel){
+        int value = 0;
+        switch(type){
+            case WHITE:
+                value = 255;
+                break;
+            case BLACK:
+                value = 0;
+                break;
+            case DOUBLE:
+                value = pixel * 2;
+                break;
+        }
+        if (value > 255)
+            return 255;
+        else
+            return value;
     }
 
     private static void setData3x3(TableView tableView, int[][] tab){

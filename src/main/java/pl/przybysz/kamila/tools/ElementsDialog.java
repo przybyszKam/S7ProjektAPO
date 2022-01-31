@@ -1,8 +1,10 @@
 package pl.przybysz.kamila.tools;
 
 import javafx.collections.ObservableList;
+import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.TextAlignment;
 
@@ -43,6 +45,27 @@ public class ElementsDialog {
         slider.setShowTickLabels(showTickLabels);
         slider.setShowTickMarks(showTickMarks);
         return slider;
+    }
+
+    public static Separator createSeparator(int layoutX, int layoutY, int prefHeight, int prefWidth, Orientation orientation){
+        Separator separator = new Separator();
+        separator.setLayoutX(layoutX);
+        separator.setLayoutY(layoutY);
+        separator.setOrientation(orientation);
+        separator.setPrefHeight(prefHeight);
+        separator.setPrefWidth(prefWidth);
+        return separator;
+    }
+
+    public static ImageView createImageView(int layoutX, int layoutY, int fitHeight, int fitWidth, boolean pickOnBounds, boolean preserveRatio){
+        ImageView imageView = new ImageView();
+        imageView.setLayoutX(layoutX);
+        imageView.setLayoutY(layoutY);
+        imageView.setFitHeight(fitHeight);
+        imageView.setFitWidth(fitWidth);
+        imageView.setPickOnBounds(pickOnBounds);
+        imageView.setPreserveRatio(preserveRatio);
+        return imageView;
     }
 
     public static RadioButton createRadioButton(String text, boolean selected, boolean mnemonicParsing, int layoutX, int layoutY, ToggleGroup toggleGroup){

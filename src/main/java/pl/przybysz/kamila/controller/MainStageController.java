@@ -1,5 +1,6 @@
 package pl.przybysz.kamila.controller;
 
+import com.sun.javafx.iio.common.ImageTools;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -21,8 +22,10 @@ import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import pl.przybysz.kamila.dialog.ImageViewStage;
+import pl.przybysz.kamila.enums.EditMagnitudeType;
 import pl.przybysz.kamila.enums.FunctionName;
 import pl.przybysz.kamila.enums.Mask;
+import pl.przybysz.kamila.enums.SegmentationOption;
 import pl.przybysz.kamila.tools.CalculateTool;
 import pl.przybysz.kamila.tools.CreatorDialog;
 import pl.przybysz.kamila.tools.FFTTool;
@@ -33,7 +36,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class MainStageController {
@@ -143,6 +145,8 @@ public class MainStageController {
             stage.setComplexImage(activeImageViewStage.getComplexImage());
             stage.setPlanes(activeImageViewStage.getPlanes());
             stage.setMagnitude(activeImageViewStage.isMagnitude());
+            stage.setMagnitude(activeImageViewStage.getMagnitude());
+            stage.setPrimarySize(activeImageViewStage.getPrimarySize());
             return stage;
         }
         return null;
@@ -286,13 +290,41 @@ public class MainStageController {
                         return;
                 }
                 break;
+                case SEGMENTATION_IMAGE:{
+                    alert = CreatorDialog.createSegmentationImage();
+                }
+                break;
             }
             if(alert!=null)
                 result = alert.showAndWait();
+
+            if(result != null){
+                if(result.get().getButtonData().equals(ButtonBar.ButtonData.CANCEL_CLOSE))
+                    return;
+            }
         }
 
         ImageViewStage stage = duplicateFile(false);
         ImageViewStageController imageViewStageController = stage.getImageViewStageController();
+
+        if(functionName.equals(FunctionName.MODIFY_FAST_FOURIER_TRANSFORMATION)){
+            if (stage.getComplexImage() != null){
+                alert = CreatorDialog.createModifyFastFourierTransformation(stage.getComplexImage().width()-1, stage.getBufferedImage());
+                if(alert!=null)
+                    result = alert.showAndWait();
+                if(result != null){
+                    if(result.get().getButtonData().equals(ButtonBar.ButtonData.CANCEL_CLOSE)) {
+                        stage.close();
+                        MainStageController.removeFromImageViewStageObservableList(stage);
+                        return;
+                    }
+                }
+            }else{
+                stage.close();
+                MainStageController.removeFromImageViewStageObservableList(stage);
+                return;
+            }
+        }
 
         if(!operationOnMat){//operacja nie na mat
             ImageHistogram imageHistogramPrimary = imageViewStageController.getImageHistogram();
@@ -354,8 +386,8 @@ public class MainStageController {
                             red = (pixel >> 16) & 0x000000FF;
                             green = (pixel >> 8) & 0x000000FF;
                             blue = (pixel) & 0x000000FF;
-                            //wyrównanie histogramu
-                            //D0 – pierwsza niezerowa wartość
+                            //wyrownanie histogramu
+                            //D0 – pierwsza niezerowa wartosc
                             //LUT[i]=((D[i]−D0)/(1−D0))*(M−1) = ((20*D[i]/20−2/20)*20/18)
                             red = calculateTool.calculateEqualizationPixelColor(tabRedD, m, red);
                             green = calculateTool.calculateEqualizationPixelColor(tabGreenD, m, green);
@@ -498,6 +530,7 @@ public class MainStageController {
         }else {//operacje na Mat
             //pierwotny obraz
             Mat primaryMat = stage.getMat();
+            //nowy obraz do wyświetlenia uzytkownikowi o tym samym rozmiarze i typie co pierwotny
             Mat newMat = new Mat(primaryMat.height(), primaryMat.width(), primaryMat.type());
             switch (functionName){
                 case LINEAR_BLUR:{
@@ -632,48 +665,116 @@ public class MainStageController {
                 }
                 break;
                 case FAST_FOURIER_TRANSFORMATION:{
+                    //zmienna na obraz szaroodcieniowy
                     Mat primaryMatGray = new Mat();
+
+                    /* jeśli wczytany obraz ma więcej niź jeden kanał to następuje konwersja obrazu
+                      i przypisanie go do zmiennej primaryMatGray
+                      jeśli ma tylko jednem kanał to kopiujemy go do tej samej zmiennej (primaryMatGray)*/
                     if(primaryMat.channels() != 1)
                         Imgproc.cvtColor(primaryMat, primaryMatGray, Imgproc.COLOR_RGB2GRAY);
                     else
                         primaryMatGray = primaryMat.clone();
 
+                    //zapis pierwotnego rozmiaru obrazu
+                    stage.setPrimarySize(primaryMatGray.size());
+
+                    //optymalizacja rozmiaru dla wczytanego obrazu
                     Mat padded = fftTool.optimizeImageDim(primaryMatGray);
                     padded.convertTo(padded, CvType.CV_32F);
 
+                    //przygotowanie płaszczyzn obrazu do uzyskania złożonego obrazu
                     List<Mat> planes = new ArrayList<>();
                     planes.add(padded);
+                    //dodanie drugiej płaszczyzny na wartosci urojone
                     planes.add(Mat.zeros(padded.size(), CvType.CV_32F));
 
+                    //koncowy obraz zlozony
                     Mat complexImage = new Mat();
+                    //przygotowanie koncowego obrazu dla pokazania dft
                     Core.merge(planes, complexImage);
 
+                    //dft
                     Core.dft(complexImage, complexImage);
                     stage.setComplexImage(complexImage);
                     stage.setPlanes(planes);
                     stage.setMagnitude(true);
-                    Mat magnitude = fftTool.createOptimizedMagnitude(complexImage);
+                    //optymalizacja obrazu wynikowego dla operacji dft
+                    Mat magnitude = fftTool.createOptimizedMagnitude(complexImage, stage);
 
+                    //przekazanie widma do prezentacji dla uzytkownika
                     newMat = magnitude.clone();
                 }
                 break;
                 case INVERSE_FAST_FOURIER_TRANSFORMATION:{
+                    //jeśli obraz nie jest widmem amplitudowym to nie wykonujemy operacji odwtorności transformaty i
+                    //kasujemy duplikat obrazu z listy dostępnych obrazow
                     if(!stage.isMagnitude()){
                         stage.close();
                         MainStageController.removeFromImageViewStageObservableList(stage);
                         return;
                     }
-                    stage.setMagnitude(false);
-                    Mat complexImage = stage.getComplexImage();
-                    List<Mat> planes = stage.getPlanes();
+                    stage.setMagnitude(false);//nowy obraz nie jest widmem amplitudowym
+                    //praca na kopiach obrazu zlozonego i plaszczyzn
+                    Mat complexImage = stage.getComplexImage().clone();
+                    List<Mat> planes = new LinkedList<>(stage.getPlanes());
 
+                    //obliczanie odwrotnej transformaty
                     Core.idft(complexImage, complexImage);
-                    Mat restoredImage = new Mat();
+                    Mat restoredImage = new Mat();//rows,cols
+                    //podzial obrazu na plaszczyzny
                     Core.split(complexImage, planes);
+                    //normalizacja
                     Core.normalize(planes.get(0), restoredImage, 0, 255, Core.NORM_MINMAX);
-                    // move back the Mat to 8 bit, in order to proper show the result
+                    //powrot do obrazu Mat 8-bitowego
                     restoredImage.convertTo(restoredImage, CvType.CV_8U);
+                    restoredImage = restoredImage.submat(0,(int)stage.getPrimarySize().height-1,0,(int)stage.getPrimarySize().width -1);
+                    //obraz do pokazania uzytkownikowi
                     newMat = restoredImage.clone();
+                }
+                break;
+                case MODIFY_FAST_FOURIER_TRANSFORMATION: {
+                    //Tylko widmo amplitudowe mozna modyfikować
+                    //jeśli obraz nie jest widmem amplitudowym to nie wykonujemy operacji modyfikacji  i
+                    //kasujemy duplikat obrazu z listy dostępnych obrazow
+
+                    if(!stage.isMagnitude()){
+                        stage.close();
+                        MainStageController.removeFromImageViewStageObservableList(stage);
+                        return;
+                    }
+
+                    //sklonowanie obrazu złożonego
+                    Mat complexImage = stage.getComplexImage().clone();//amp
+
+                    //sklonowanie obrazu pierwotnego
+                    newMat = primaryMat.clone();
+
+                    //przypisanie punktów początkowych
+                    int startX = ImageAndMatTool.P1X;
+                    int startY = ImageAndMatTool.P1Y;
+                    int endX = ImageAndMatTool.P2X;
+                    int endY = ImageAndMatTool.P2Y;
+
+                    //ewentualna zamiana jeśli p2x jest mniejsze od p1x
+                    if(ImageAndMatTool.P2X <= ImageAndMatTool.P1X){
+                        startX = ImageAndMatTool.P2X;
+                        endX = ImageAndMatTool.P1X;
+                    }
+
+                    //ewentualna zamiana jeśli p2y jest mniejsze od p1y
+                    if(ImageAndMatTool.P2Y <= ImageAndMatTool.P1Y){
+                        startY = ImageAndMatTool.P2Y;
+                        endY = ImageAndMatTool.P1Y;
+                    }
+
+                    //modyfikacja obrazu złożonego
+                    fftTool.modifyMagnitude(startX, startY, endX, endY, complexImage);
+
+                    //modyfikacja obrazu ktory będzie pokazywany uzytkownikowi
+                    fftTool.modifyMagnitude(startX, startY, endX, endY, newMat);
+                    //ustawienie obrazu złożonego
+                    stage.setComplexImage(complexImage);
                 }
                 break;
                 case BINARY_OPERATION_AND:{
@@ -741,6 +842,22 @@ public class MainStageController {
                     markers2.convertTo(markers2,CvType.CV_8U);
 
                     newMat = markers2.clone();
+                }
+                break;
+                case SEGMENTATION_IMAGE: {
+
+                    newMat = new Mat();
+                    Mat grayScale = new Mat();
+                    Imgproc.cvtColor(primaryMat, grayScale, Imgproc.COLOR_RGB2GRAY);
+
+                    if (ImageAndMatTool.segmentationOption.equals(SegmentationOption.MEAN)){
+                        Imgproc.adaptiveThreshold(grayScale, newMat, 125, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 11, 12);
+                }else if(ImageAndMatTool.segmentationOption.equals(SegmentationOption.STANDARD_DEVIATION)){
+
+                    }else if(ImageAndMatTool.segmentationOption.equals(SegmentationOption.BRIGHTNESS_VARIANCE)){
+
+                    }
+
                 }
                 break;
             }
@@ -849,8 +966,10 @@ public class MainStageController {
         switchFunctionName(FunctionName.SEGMENT_IMAGE_ADAPTATION, true, false);
     }
 
-
-
+    @FXML
+    public void segmentationImage() {
+        switchFunctionName(FunctionName.SEGMENTATION_IMAGE, true, true);
+    }
 
     //Projekt
     @FXML//wtkonanie transformaty - wynikiem jest widmo amplitudowe
@@ -866,7 +985,7 @@ public class MainStageController {
     @FXML
     public void modifyFastFourierTransformation(ActionEvent actionEvent) {
         //rysowanie po obrazie tylko jesli to jest widmo
+        switchFunctionName(FunctionName.MODIFY_FAST_FOURIER_TRANSFORMATION, true, true);
     }
-
 
 }

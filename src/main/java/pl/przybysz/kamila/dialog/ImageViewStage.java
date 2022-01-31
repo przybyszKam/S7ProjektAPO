@@ -2,9 +2,9 @@ package pl.przybysz.kamila.dialog;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.scene.image.PixelReader;
 import javafx.stage.Stage;
 import org.opencv.core.Mat;
+import org.opencv.core.Size;
 import pl.przybysz.kamila.controller.ImageViewStageController;
 import pl.przybysz.kamila.controller.MainStageController;
 import pl.przybysz.kamila.utils.ImageHistogram;
@@ -24,10 +24,16 @@ public class ImageViewStage extends Stage {
     private File file;
     private String extension;//rozszerzenie pliku
     private Mat mat;
+
     //FFT
+    /**
+     * Koncowy złożony obraz
+     */
     private Mat complexImage;//na potrzeby FFT i iFFT
     private List<Mat> planes;//na potrzeby FFt i iFFT
     private boolean isMagnitude = false;//czy to widmo
+    private Mat magnitude;
+    private Size primarySize;
 
 
     private Boolean activeStage;//z początku nie jest aktywna
@@ -68,6 +74,22 @@ public class ImageViewStage extends Stage {
 
     public void setImageName(String imageName) {
         this.imageName.set(imageName);
+    }
+
+    public Size getPrimarySize() {
+        return primarySize;
+    }
+
+    public void setPrimarySize(Size primarySize) {
+        this.primarySize = primarySize;
+    }
+
+    public Mat getMagnitude() {
+        return magnitude;
+    }
+
+    public void setMagnitude(Mat magnitude) {
+        this.magnitude = magnitude;
     }
 
     public String getImagePath() {

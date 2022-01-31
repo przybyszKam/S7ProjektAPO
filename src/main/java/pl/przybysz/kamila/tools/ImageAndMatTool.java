@@ -1,28 +1,26 @@
 package pl.przybysz.kamila.tools;
 
-import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.highgui.HighGui;
-import org.opencv.imgcodecs.Imgcodecs;
 import pl.przybysz.kamila.controller.ImageViewStageController;
 import pl.przybysz.kamila.dialog.ImageViewStage;
 import pl.przybysz.kamila.enums.BorderType;
+import pl.przybysz.kamila.enums.EditMagnitudeType;
 import pl.przybysz.kamila.enums.Mask;
+import pl.przybysz.kamila.enums.SegmentationOption;
 import pl.przybysz.kamila.utils.ImageHistogram;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 
 public class ImageAndMatTool {
 
@@ -40,6 +38,14 @@ public class ImageAndMatTool {
     public static int medianSize;
     public static BorderType borderType;
     public static int arbitraryValue;
+    public static SegmentationOption segmentationOption;
+    public static EditMagnitudeType editMagnitudeType;
+
+    //projekt
+    public static int P1X;
+    public static int P1Y;
+    public static int P2X;
+    public static int P2Y;
 
     public Mat createKernel3x3(int[][] mask){
         Mat kernel = new Mat(3,3, CvType.CV_32F) {
@@ -161,7 +167,6 @@ public class ImageAndMatTool {
         }
 
     }
-
 
     /**
      * Piksele bez zmian

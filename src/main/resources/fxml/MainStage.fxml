@@ -46,6 +46,7 @@
                    <MenuItem fx:id="menuItemSegmentImageOtsu" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#segmentImageOtsu" text="Segmentacja obrazu - metoda otsu" />
                             <SeparatorMenuItem mnemonicParsing="false" />
                             <MenuItem fx:id="menuItemWatershed" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#watershed" text="Segmentacja obrazu - metoda wododziałowa" />
+                  <MenuItem fx:id="menuItemSegmentImage" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#segmentationImage" text="Segmentacja obrazu" />
                             <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="menuItemSegmentImageAdaptation" disable="${controller.needsImage}" mnemonicParsing="false" onAction="#segmentImageAdaptation" text="Segmentacja obrazu - metoda adaptacyjna" />
 
